@@ -1,0 +1,10 @@
+<div>
+    <h1><a href="/">Fitty Clothing</a></h1>
+</div>
+
+{% for item in items %}
+    <div>
+        <h2><a href="">{{ item.title }}</a></h2>
+        <p>{{ item.description|linebreaksbr }}</p>
+    </div>
+{% endfor %}
