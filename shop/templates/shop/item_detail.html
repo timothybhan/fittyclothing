@@ -1,0 +1,9 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+    <div class="item">
+        <h2>{{ item.title }}</h2>
+        <p>{{ item.price }}</p>
+        <p>{{ item.description|linebreaksbr }}</p>
+    </div>
+{% endblock %}
