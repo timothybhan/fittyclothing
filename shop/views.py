@@ -1,5 +1,7 @@
-from django.shortcuts import render, get_object_or_404
-from .models import Item
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Item, OrderItem, Order
+from django.utils import timezone
+from django.contrib import messages
 # Create your views here.
 
 def item_list(request):
@@ -11,3 +13,31 @@ def item_list(request):
 def item_detail(request,pk):
     item = get_object_or_404(Item,pk=pk)
     return render(request, 'shop/item_detail.html', {'item':item})
+
+def add_to_cart(request, pk):
+    item = get_object_or_404(Item, pk=pk)
+    order_item, created = OrderItem.objects.get_or_create(
+        item=item,
+        user=request.user,
+        ordered=False
+    )
+    order_qs = Order.objects.filter(user=request.user, ordered=False)
+    if order_qs.exists():
+        order = order_qs[0]
+        # check if the order item is in the order
+        if order.items.filter(item__pk=item.pk).exists():
+            order_item.quantity += 1
+            order_item.save()
+            messages.info(request, "This item quantity was updated.")
+            return redirect("item_list")
+        else:
+            order.items.add(order_item)
+            messages.info(request, "This item was added to your cart.")
+            return redirect("item_list")
+    else:
+        ordered_date = timezone.now()
+        order = Order.objects.create(
+            user=request.user, ordered_date=ordered_date)
+        order.items.add(order_item)
+        messages.info(request, "This item was added to your cart.")
+        return redirect("item_list")
