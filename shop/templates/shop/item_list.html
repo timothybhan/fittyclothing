@@ -6,6 +6,7 @@
             <h2><a href="{% url 'item_detail' pk=item.pk %}">{{ item.title }}</a></h2>
             <p>{{ item.price }}</p>
             <p>{{ item.description|linebreaksbr }}</p>
+            <img src="{{ item.image.url }}">
         </div>
     {% endfor %}
 {% endblock %}
