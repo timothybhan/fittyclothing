@@ -59,7 +59,6 @@ def remove_from_cart(request, pk):
             )[0]
             order_item.delete()
             messages.info(request, "This item was removed from your cart.")
-            messages.info(request, order.objects.all())
             return redirect("item_list")
         else:
             # add a message saying the order does not contain the item
