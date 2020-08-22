@@ -23,14 +23,18 @@
             {% for order_item in object.items.all %}
             <tr>
               <th scope="row">{{ forloop.counter }}</th>
-              <td><img src="{{ order_item.item.image.url }}" width="150"></td>
+              <td><a href="{% url 'item_detail' pk=order_item.item.pk %}">
+                <img src="{{ order_item.item.image.url }}" width="150">
+              </a></h2>
               <td>{{ order_item.item.title }}</td>
               <td>{{ order_item.item.price }}</td>
               <td>
                   <a href="{% url 'remove_one_from_cart' pk=order_item.item.pk %}" style="margin-right:4px">-</a>
                   {{ order_item.quantity }}
                   <a href="{% url 'add_to_cart' pk=order_item.item.pk %}" style="margin-left:4px">+</a>
-                  
+                  <br>
+                    <a href="{% url 'remove_from_cart' pk=order_item.item.pk %}" style="margin-left:4px;;">Remove all</a>
+                  </br>
               </td>
 
 

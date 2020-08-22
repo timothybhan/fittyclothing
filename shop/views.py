@@ -75,16 +75,16 @@ def remove_from_cart(request, pk):
             )[0]
             order_item.delete()
             messages.info(request, "This item was removed from your cart.")
-            return redirect("item_list")
+            return redirect("order_summary")
         else:
             # add a message saying the order does not contain the item
             messages.info(request, "This item was not in your cart.")
-            return redirect("item_list")
+            return redirect("order_summary")
             
     else:
         # add a message saying the user doesnt have an order
         messages.info("You do not have an active order.")
-        return redirect("item_list")
+        return redirect("order_summary")
 
 
 @login_required
