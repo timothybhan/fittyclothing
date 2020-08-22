@@ -7,9 +7,11 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     path('', views.item_list, name='item_list'),
+    path('order_summary/', views.order_summary, name = 'order_summary'),
     path('item/<int:pk>/', views.item_detail, name='item_detail'),
     path('add-to-cart/<int:pk>', views.add_to_cart, name='add_to_cart'),
-    path('remove-from-cart/<int:pk>', views.remove_from_cart, name='remove_from_cart')
+    path('remove-from-cart/<int:pk>', views.remove_from_cart, name='remove_from_cart'),
+    path('remove-one-from-cart/<int:pk>', views.remove_one_from_cart, name='remove_one_from_cart'),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

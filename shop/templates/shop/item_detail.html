@@ -7,8 +7,6 @@
         <p>${{ item.price }}</p>
         <a href="{% url 'add_to_cart' pk=item.pk %}" class="button">Add to cart</a>
         <br>
-        <a href="{% url 'remove_from_cart' pk=item.pk %}" class="button">Remove from cart</a>
-        <br>
         <img src="{{ item.image.url }}">
     </div>
 {% endblock %}

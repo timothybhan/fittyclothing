@@ -1,0 +1,57 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+<h2>Order Summary</h2>
+    
+    <div>
+        <table style="width:150%">
+            <colgroup>
+                <col span="1" style="width: 0%;" align="center">
+                <col span="1" style="width: 15%;" align="center">
+                <col span="1" style="width: 10%;" align="center">
+                <col span="1" style="width: 10%;" align="center">
+                <col span="1" style="width: 10%;" align="center">
+             </colgroup>
+            <tr>
+              <th>#</th>
+              <th></th>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Total Item Price</th>
+            </tr>
+            {% for order_item in object.items.all %}
+            <tr>
+              <th scope="row">{{ forloop.counter }}</th>
+              <td><img src="{{ order_item.item.image.url }}" width="150"></td>
+              <td>{{ order_item.item.title }}</td>
+              <td>{{ order_item.item.price }}</td>
+              <td>
+                  <a href="{% url 'remove_one_from_cart' pk=order_item.item.pk %}" style="margin-right:4px">-</a>
+                  {{ order_item.quantity }}
+                  <a href="{% url 'add_to_cart' pk=order_item.item.pk %}" style="margin-left:4px">+</a>
+                  
+              </td>
+
+
+              <td>
+                  ${{ order_item.get_total_item_price }}
+                  {% if order_item.get_amount_saved > 0 %}
+                    (Saving ${{order_item.get_amount_saved}})
+                  {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="5"><b>Order Total</b></td>
+                <td>${{ object.get_total }}</td>
+            </tr>
+            
+
+
+        </table>
+            <p style="float: right; margin-top:5%; display:inline"><a hred="/checkout/">Proceed to checkout</a></p>
+            <p style="float: right; margin-top:5%; display:inline; margin-right:5%"><a href="/">Continue shopping</a></p>
+    </div>
+    
+{% endblock %}

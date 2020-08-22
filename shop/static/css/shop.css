@@ -10,6 +10,13 @@
     text-decoration: none;
 }
 
+.page-header h2, .page-header h2 a, .page-header h2 a:visited, .page-header h2 a:active {
+    color: #ffffff;
+    font-size: 20pt;
+    text-decoration: none;
+    padding: 20px 20px 20px 40px;
+}
+
 .content {
     margin-left: 20px;
 }
