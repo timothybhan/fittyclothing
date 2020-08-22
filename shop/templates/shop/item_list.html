@@ -1,12 +1,17 @@
 {% extends 'shop/base.html' %}
 
 {% block content %}
+    <div class="row">
     {% for item in items %}
-        <div class="item">
-            <h2><a href="{% url 'item_detail' pk=item.pk %}">{{ item.title }}</a></h2>
-            <p>${{ item.price }}</p>
-            <p>{{ item.description|linebreaksbr }}</p>
-            <img src="{{ item.image.url }}" width="300">
+        <div class="col-sm-1"></div>
+            <div class="item">
+                <h2><a href="{% url 'item_detail' pk=item.pk %}">{{ item.title }}</a></h2>
+                <p>${{ item.price }}</p>
+                <p>{{ item.description|linebreaksbr }}</p>
+                <a href="{% url 'item_detail' pk=item.pk %}">
+                <img src="{{ item.image.url }}" width="300">
+            </div>
         </div>
+    </div>
     {% endfor %}
 {% endblock %}
