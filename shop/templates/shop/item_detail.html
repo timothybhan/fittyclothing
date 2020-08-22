@@ -4,7 +4,7 @@
     <div class="item">
         <h2>{{ item.title }}</h2>
         <p>{{ item.description|linebreaksbr }}</p>
-        <p>${{ item.price }}</p>
+        <p class="price">${{ item.price }}</p>
         <a href="{% url 'add_to_cart' pk=item.pk %}" class="button">Add to cart</a>
         <br>
         <img src="{{ item.image.url }}">
