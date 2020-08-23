@@ -8,8 +8,6 @@
         <link rel="stylesheet" href="{% static 'css/shop.css' %}">
     </head>
 
-    
-
     <body>
         {% if messages %}
         <ul class="messages">
@@ -23,14 +21,7 @@
             <h1 style = "display:inline;"><a href="/">Fitty Clothing</a></h1>
             <h2 style="float: right" style = "display:inline;"><a href="/order_summary">Cart</a></h2>
         </div>
-
-        <div class="content container">
-            <div class="row">
-                <div class="col-md-6">
-                {% block content %}
-                {% endblock %}
-                </div>
-            </div>
-        </div>
+        {% block content %}
+        {% endblock %}
     </body>
 </html>
