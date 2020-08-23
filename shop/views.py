@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
-from .models import Item, OrderItem, Order
+from .models import Item, OrderItem, Order, BillingAddress
+from .forms import CheckoutForm
 from django.utils import timezone
 from django.contrib import messages
 # Create your views here.
@@ -120,3 +121,44 @@ def remove_one_from_cart(request, pk):
         # add a message saying the user doesnt have an order
         messages.info("You do not have an active order.")
         return redirect("order_summary")
+
+@login_required
+def checkout(request):
+    if request.method == 'POST':
+        form = CheckoutForm(request.POST)
+        try:
+            order = Order.objects.get(user=request.user, ordered = False)
+        except ObjectDoesNotExist:
+            messages.error(request, "You do not have an active order.")
+            return redirect("/order_summary")
+        if form.is_valid():
+            print(form.cleaned_data)
+            street_address = form.cleaned_data.get('street_address')
+            apartment_address = form.cleaned_data.get('apartment_address')
+            zipcode = form.cleaned_data.get('zipcode')
+            same_shipping_address = form.cleaned_data.get('same_shipping_address')
+            save_info = form.cleaned_data.get('save_info')
+            payment_option = form.cleaned_data.get('payment_option')
+            billing_address = BillingAddress(
+                user = request.user,
+                street_address = street_address,
+                apartment_address = apartment_address,
+                zipcode = zipcode
+            )
+            billing_address.save()
+            order.billing_address = billing_address
+            order.save()
+        return redirect('/checkout')
+
+    form = CheckoutForm()
+    context = {
+        'form': form
+    }
+    return render(request, 'shop/checkout.html', context)
+
+def payment(request):
+    form = CheckoutForm()
+    context = {
+        'form': form
+    }
+    return render(request, 'shop/payment.html', context)
