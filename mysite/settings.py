@@ -63,7 +63,7 @@ ROOT_URLCONF = 'mysite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'], # new
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -135,10 +135,13 @@ MEDIA_URL = '/media/'
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
-]
+] 
 
 SITE_ID = 1
 
 LOGIN_REDIRECT_URL = "/"
 
 CRISPY_TEMPLATE_PACK = 'uni_form'
+
+STRIPE_PUBLISHABLE_KEY = 'pk_test_51HJR6aHabwlYU4TJMfKvtO9IlYAGuMA6Wms3iFDSDlZ8IAKM06DVpJrwOmy7tYElwldWlYFg3C9S7ahs2Izvv3Cv00Fq3ncx7R'
+STRIPE_SECRET_KEY = 'sk_test_51HJR6aHabwlYU4TJAphzIHNDMVrxQEFRdMUUie8nguqHlbZShONy44XyYzzfB0qYYL277WAggupEUhBIw5T8kkgB005E2kC2pG'

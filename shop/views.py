@@ -5,6 +5,12 @@ from .models import Item, OrderItem, Order, BillingAddress
 from .forms import CheckoutForm
 from django.utils import timezone
 from django.contrib import messages
+
+import stripe
+from django.conf import settings # new
+from django.http.response import JsonResponse # new
+from django.views.decorators.csrf import csrf_exempt # new
+
 # Create your views here.
 
 def item_list(request):
@@ -148,7 +154,11 @@ def checkout(request):
             billing_address.save()
             order.billing_address = billing_address
             order.save()
-        return redirect('/checkout')
+        print(form.cleaned_data.get('payment_option'))
+        if (form.cleaned_data.get('payment_option') == 'C'):
+            return redirect('/payment/stripe')
+        else:
+            return redirect('/')
 
     form = CheckoutForm()
     context = {
@@ -156,9 +166,76 @@ def checkout(request):
     }
     return render(request, 'shop/checkout.html', context)
 
-def payment(request):
+def payment(request, payment_option):
     form = CheckoutForm()
     context = {
         'form': form
     }
+    
     return render(request, 'shop/payment.html', context)
+
+@csrf_exempt
+def stripe_config(request):
+    if request.method == 'GET':
+        stripe_config = {'publicKey': settings.STRIPE_PUBLISHABLE_KEY}
+        return JsonResponse(stripe_config, safe=False)
+
+@csrf_exempt
+def create_checkout_session(request):
+    if request.method == 'GET':
+        domain_url = 'http://localhost:8000/'
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        try:
+            # Create new Checkout Session for the order
+            # Other optional params include:
+            # [billing_address_collection] - to display billing address details on the page
+            # [customer] - if you have an existing Stripe Customer ID
+            # [payment_intent_data] - lets capture the payment later
+            # [customer_email] - lets you prefill the email input in the form
+            # For full details see https:#stripe.com/docs/api/checkout/sessions/create
+
+            # ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
+            order = Order.objects.get(user=request.user, ordered = False)
+            line_items = []
+
+            for order_item in order.items.all():
+                if order_item.item.discount_price:
+                    price = str(int(order_item.item.discount_price*100))
+                else:
+                    price = str(int(order_item.item.price*100))
+                line_items.append(
+                    {
+                        'name':order_item.item.title,
+                        'quantity':order_item.quantity,
+                        'currency':'usd',
+                        'amount':price,
+                    }
+                )
+            checkout_session = stripe.checkout.Session.create(
+                success_url=domain_url + 'success?session_id={CHECKOUT_SESSION_ID}',
+                cancel_url=domain_url + 'cancelled/',
+                payment_method_types=['card'],
+                mode='payment',
+                line_items=line_items,
+
+                
+                
+                # line_items=[
+                #     {
+                #         'name': 'T-shirt',
+                #         'quantity': 1,
+                #         'currency': 'usd',
+                #         'amount': '2000',
+                #     },
+                #     {
+                #         'name': 'T-shirt',
+                #         'quantity': 1,
+                #         'currency': 'usd',
+                #         'amount': '2000',
+                #     }
+                # ]
+
+            )
+            return JsonResponse({'sessionId': checkout_session['id']})
+        except Exception as e:
+            return JsonResponse({'error': str(e)})

@@ -14,6 +14,8 @@ urlpatterns = [
     path('remove-one-from-cart/<int:pk>', views.remove_one_from_cart, name='remove_one_from_cart'),
     path('checkout', views.checkout, name='checkout'),
     path('payment/<payment_option>', views.payment, name='payment'),
+    path('config/', views.stripe_config),
+    path('create-checkout-session/', views.create_checkout_session, name='create_checkout_session'), # new
 ]
 
 urlpatterns += staticfiles_urlpatterns()
