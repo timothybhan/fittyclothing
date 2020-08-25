@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 
 CATEGORY_CHOICES = (
-    ('S', 'Shirt'),
+    ('S', 'Shirts'),
     ('SW', 'Sport wear'),
     ('OW', 'Outwear')
 )
@@ -59,8 +59,8 @@ class Order(models.Model):
     start_date = models.DateTimeField(auto_now_add=True)
     ordered_date = models.DateTimeField()
     ordered = models.BooleanField(default=False)
-    billing_address = models.ForeignKey(
-        'Billingaddress', on_delete = models.SET_NULL, blank = True, null = True)
+    shipping_address = models.ForeignKey(
+        'Shippingaddress', on_delete = models.SET_NULL, blank = True, null = True)
 
 
     def __str__(self):
@@ -72,12 +72,22 @@ class Order(models.Model):
             total += order_item.get_total_item_price()
         return total
 
-class BillingAddress(models.Model):
+class ShippingAddress(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL
                              , on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
     street_address = models.CharField(max_length=100)
     apartment_address = models.CharField(max_length=100)
+    #country = models.CharField(max_length=100)
+    #state = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
     zipcode = models.CharField(max_length=100)
+    phone = models.CharField(max_length=100)
+    email = models.CharField(max_length=100)
+    #same_shipping_address = models.BooleanField()
+    #save_info = models.BooleanField()
+    #payment_option = models.CharField(max_length=100)
 
     def __str__(self):
         return self.user.username

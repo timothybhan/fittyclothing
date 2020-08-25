@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
-from .models import Item, OrderItem, Order, BillingAddress
+from .models import Item, OrderItem, Order, ShippingAddress, UserProfile
 from .forms import CheckoutForm
 from django.utils import timezone
 from django.contrib import messages
@@ -16,6 +16,24 @@ from django.views.decorators.csrf import csrf_exempt # new
 def item_list(request):
     context = {
         'items': Item.objects.all().order_by('title')
+    }
+    return render(request, 'shop/item_list.html', context)
+
+def shirts_list(request):
+    context = {
+        'items': Item.objects.all().filter(category="S")
+    }
+    return render(request, 'shop/item_list.html', context)
+
+def sportswear_list(request):
+    context = {
+        'items': Item.objects.all().filter(category="SW")
+    }
+    return render(request, 'shop/item_list.html', context)
+
+def outwear_list(request):
+    context = {
+        'items': Item.objects.all().filter(category="OW")
     }
     return render(request, 'shop/item_list.html', context)
 
@@ -139,24 +157,43 @@ def checkout(request):
             return redirect("/order_summary")
         if form.is_valid():
             print(form.cleaned_data)
+            first_name = form.cleaned_data.get('first_name')
+            last_name = form.cleaned_data.get('last_name')
             street_address = form.cleaned_data.get('street_address')
             apartment_address = form.cleaned_data.get('apartment_address')
+            #country = form.cleaned_data.get('country')
+            #state = form.cleaned_data.get('state')
+            city = form.cleaned_data.get('city')
             zipcode = form.cleaned_data.get('zipcode')
-            same_shipping_address = form.cleaned_data.get('same_shipping_address')
-            save_info = form.cleaned_data.get('save_info')
+            phone = form.cleaned_data.get('phone')
+            email = form.cleaned_data.get('email')
+            #same_billing_address = form.cleaned_data.get('same_shipping_address')
+            #save_info = form.cleaned_data.get('save_info')
             payment_option = form.cleaned_data.get('payment_option')
-            billing_address = BillingAddress(
+            shipping_address = ShippingAddress(
                 user = request.user,
+                first_name = first_name,
+                last_name = last_name,
                 street_address = street_address,
                 apartment_address = apartment_address,
-                zipcode = zipcode
+                #country = country,
+                #state = state,
+                city = city,
+                zipcode = zipcode,
+                phone = phone,
+                email = email,
+                #same_shipping_address = same_shipping_address,
+                #save_info = save_info,
+                #payment_option = payment_option,
             )
-            billing_address.save()
-            order.billing_address = billing_address
+            shipping_address.save()
+            order.shipping_address = shipping_address
             order.save()
         print(form.cleaned_data.get('payment_option'))
-        if (form.cleaned_data.get('payment_option') == 'C'):
+        if (form.cleaned_data.get('payment_option') == 'S'):
             return redirect('/payment/stripe')
+        elif (form.cleaned_data.get('payment_option') == 'P'):
+            return redirect('/payment/paypal')
         else:
             return redirect('/')
 
@@ -167,9 +204,8 @@ def checkout(request):
     return render(request, 'shop/checkout.html', context)
 
 def payment(request, payment_option):
-    form = CheckoutForm()
     context = {
-        'form': form
+        'order': Order.objects.get(user=request.user, ordered = False),
     }
     
     return render(request, 'shop/payment.html', context)
@@ -183,7 +219,7 @@ def stripe_config(request):
 @csrf_exempt
 def create_checkout_session(request):
     if request.method == 'GET':
-        domain_url = 'http://localhost:8000/'
+        domain_url = 'http://127.0.0.1:8000/'
         stripe.api_key = settings.STRIPE_SECRET_KEY
         try:
             # Create new Checkout Session for the order
@@ -212,30 +248,28 @@ def create_checkout_session(request):
                     }
                 )
             checkout_session = stripe.checkout.Session.create(
-                success_url=domain_url + 'success?session_id={CHECKOUT_SESSION_ID}',
-                cancel_url=domain_url + 'cancelled/',
+                # success_url=domain_url + 'success?session_id={CHECKOUT_SESSION_ID}',
+                success_url=domain_url + 'success',
+                cancel_url=domain_url + 'order_summary',
                 payment_method_types=['card'],
                 mode='payment',
                 line_items=line_items,
-
-                
-                
-                # line_items=[
-                #     {
-                #         'name': 'T-shirt',
-                #         'quantity': 1,
-                #         'currency': 'usd',
-                #         'amount': '2000',
-                #     },
-                #     {
-                #         'name': 'T-shirt',
-                #         'quantity': 1,
-                #         'currency': 'usd',
-                #         'amount': '2000',
-                #     }
-                # ]
 
             )
             return JsonResponse({'sessionId': checkout_session['id']})
         except Exception as e:
             return JsonResponse({'error': str(e)})
+
+def success(request):
+    return render(request, 'shop/success.html')
+
+def cancelled(request):
+    return render(request, 'shop/cancelled.html')
+
+@login_required
+def contact(request):
+    context = {
+        #'user': UserProfile.objects.get(user=request.user),
+    }
+    
+    return render(request, 'shop/contact.html', context)

@@ -8,21 +8,43 @@
         <link rel="stylesheet" href="{% static 'css/shop.css' %}">
         <link href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAD9/f0AAAAAAP///wDx8fEA+vr6APz8/ADu7u4A/v7+APDw8AD5+fkA8vLyAAwM6AD7+/sAAAAAAAAAAAAAAAAAEREREREREREREbuxG7sRERERsRuxGxEREREbsRuxERERZxERERFAEREmEREREagREREYK7YhERERESUSYWIRERFnaBYhJkAREVFZNTU1GhEREcERERwRERERG3Z2sRERERG7u7u7EREREbu7u7sRERERG7u7sRERERERERERERHxjwAA4AcAAOAHAADAAwAAgAEAAIABAADAAwAAwAMAAIABAACAAQAAwAMAAMADAADgBwAA4AcAAPAPAAD4HwAA" rel="icon" type="image/x-icon" />
     </head>
-
+    
     <body>
-        {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        
-        <div class="page-header">
-            <h1 style = "display:inline;"><a href="/">Fitty Clothing</a></h1>
-            <h2 style="float: right" style = "display:inline;"><a href="/order_summary">Cart</a></h2>
+        <div class="page">
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            
+            <div class="page-header">
+                <h1><a href="/">Fitty Clothing</a></h1>
+                <h2><a href="/order_summary">Cart</a></h2>
+                <div class="dropdown">
+                    <h2><a href="/">Shop</a></h2>
+                    <div class="dropdown-content">
+                        <h2><a href="/shirts">Shirts</a></h2>
+                        <h2><a href="/sportswear">Sports wear</a></h2>
+                        <h2><a href="/outwear">Outwear</a></h2>
+                    </div>
+                </div>
+
+                <h2><a href="/contact">Contact</a></h2>
+            </div>
+
+            
+            {% block content %}
+            {% endblock %}
         </div>
-        {% block content %}
-        {% endblock %}
     </body>
+    <div class="page">
+        <div class="page-footer">
+            <footer>
+                <h1><a href="/">Fitty Clothing</a></h1>
+            </footer>
+        </div>
+    </div>
+    
 </html>

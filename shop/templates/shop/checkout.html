@@ -1,16 +1,8 @@
 {% extends 'shop/base.html' %}
 {% load crispy_forms_tags %}
-
+{% load static %}
 {% block content %}
-<!-- <div class="checkout">
-    <form action="/your-name/" method="post">
-        <label for="your_name">Your name: </label>
-        <input id="your_name" type="text" name="your_name" value="{{ current_name }}">
-        <input type="submit" value="OK">
-    </form>
-</div> -->
 <form method="POST" style="margin-left:30px;">
     {% crispy form %}
 </form>
-
 {% endblock %}

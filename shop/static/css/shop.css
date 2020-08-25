@@ -1,24 +1,84 @@
+html, body {
+  margin:0;
+  padding:0;
+  height:100%;
+}
+.page {
+  min-height: 100%;
+  position: relative;
+}
+body {
+  padding-bottom:60px;
+}
+
+
 .page-header {
     background-color: #18558A;
-    margin-top: 0;
-    padding: 20px 20px 20px 40px;
+    margin-top:0;
 }
 
 .page-header h1, .page-header h1 a, .page-header h1 a:visited, .page-header h1 a:active {
     color: #ffffff;
-    font-size: 36pt;
+    font-size: 140%;
+    width:50%;
+    margin-top:0.5%;
+    margin-left:1%;
     text-decoration: none;
+    display:inline-block;
 }
 
 .page-header h2, .page-header h2 a, .page-header h2 a:visited, .page-header h2 a:active {
     color: #ffffff;
-    font-size: 20pt;
+    font-size: 120%;
+    padding: 0 1.5% 0 1%;
     text-decoration: none;
-    padding: 20px 20px 20px 40px;
+    float: right;
+}
+
+.page-footer {
+  position:absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  background-color: #18558A;
+  color:white;
+  text-align: center;
+}
+
+.page-footer h1, .page-footer h1 a, .page-footer h1 a:visited, .page-footer h1 a:active {
+  color: #ffffff;
+  font-size: 140%;
+  width:50%;
+  text-decoration: none;
+  display:inline-block;
 }
 
 h1, h2, h3, h4 {
     font-family: 'Playfair Display';
+}
+
+.dropdown {
+  /* position: relative; */
+  /* display: inline-block; */
+  color: black;
+  padding: 0 1% 0 1%;
+  text-decoration: none;
+  float: right;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: grey;
+  min-width: 100%;
+  margin-top:50%;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 0% 50% 10% 20%;
+  z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
 }
 
 .item {
@@ -27,7 +87,6 @@ h1, h2, h3, h4 {
 
 .card {
     margin-bottom: 70px;
-    margin-left: 20px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     text-align: center;
 }
@@ -49,12 +108,12 @@ h1, h2, h3, h4 {
 /* Float three columns side by side */
 .column {
   float: left;
-  width: 33%;
-  padding: 0 10px;
+  width: 25%;
+  padding: 1% 1.5% 1% 1.5%;
 }
 
 /* Remove extra left and right margins, due to padding in columns */
-.row {margin: 0 -5px;}
+.row {margin: 0 10%;}
 
 /* Clear floats after the columns */
 .row:after {
@@ -83,4 +142,9 @@ h1, h2, h3, h4 {
 .order-summary {
     margin-left: 40px;
     margin-right: auto;
+}
+
+ tr {
+  border-style: solid hidden solid hidden;
+  border-collapse: collapse;
 }

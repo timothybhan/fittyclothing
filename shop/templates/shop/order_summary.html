@@ -1,15 +1,17 @@
 {% extends 'shop/base.html' %}
 
 {% block content %}
-    <div class="order-summary">
-        <h2>Order Summary</h2>
-        <table style="width:95%">
+<h2 style="margin-left:10%">Order Summary</h2>
+
+    
+    <div>
+        <table style="width:80%; margin-left:10%; margin-top:2%;">
             <colgroup>
-                <col span="1" style="width: 10%;" align="center">
+                <col span="1" style="width: 5%;" align="center">
                 <col span="1" style="width: 20%;" align="center">
-                <col span="1" style="width: 20%;" align="center">
-                <col span="1" style="width: 20%;" align="center">
-                <col span="1" style="width: 20%;" align="center">
+                <col span="1" style="width: 15%;" align="center">
+                <col span="1" style="width: 15%;" align="center">
+                <col span="1" style="width: 15%;" align="center">
              </colgroup>
             <tr>
               <th>#</th>
@@ -21,18 +23,19 @@
             </tr>
             {% for order_item in object.items.all %}
             <tr>
-              <th scope="row">{{ forloop.counter }}</th>
+              <th scope="row" >{{ forloop.counter }}</th>
               <td><a href="{% url 'item_detail' pk=order_item.item.pk %}">
-                <img src="{{ order_item.item.image.url }}" width="150">
-              </a></h2>
+                <img src="{{ order_item.item.image.url }}" 
+                width="150" height="130" style="object-fit:contain; margin-top:10px; margin-bottom:10px; background-color: grey; border: solid black;">
+              </a></td>
               <td>{{ order_item.item.title }}</td>
-              <td>${{ order_item.item.price }}</td>
+              <td>{{ order_item.item.price }}</td>
               <td>
                   <a href="{% url 'remove_one_from_cart' pk=order_item.item.pk %}" style="margin-right:4px">-</a>
                   {{ order_item.quantity }}
                   <a href="{% url 'add_to_cart' pk=order_item.item.pk %}" style="margin-left:4px">+</a>
                   <br>
-                    <a href="{% url 'remove_from_cart' pk=order_item.item.pk %}" style="margin-left:4px;;">Remove all</a>
+                    <button a href="{% url 'remove_from_cart' pk=order_item.item.pk %}" style=" margin-top: 15px;">Remove all</a>
                   </br>
               </td>
 
@@ -55,10 +58,9 @@
 
 
         </table>
-        <div style="width: 95%;">
-            <p style="float: right; margin-top:5%;"><a href="/checkout">Proceed to checkout</a></p>
-            <p style="float: right; margin-top:5%;; margin-right:5%"><a href="/">Continue shopping</a></p>
-        </div>
+            <button style="float: left; margin-top:2%; margin-left:10%;"><a href="/">Continue shopping</a></button>
+            <button style="float: right; margin-top:2%; margin-right:10%; margin-bottom:50px;"><a href="/checkout">Proceed to checkout</a></button>
+            
     </div>
     
 {% endblock %}
